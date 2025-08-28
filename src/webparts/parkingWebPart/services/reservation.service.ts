@@ -45,66 +45,75 @@ export class ReservationsService {
   }
 
   //Funcion para obtener celdas disponibles
-async getAvailability(date: string, turn: TurnType): Promise<AvailabilityCell[]> {
+  async getAvailability(date: string, turn: TurnType): Promise<AvailabilityCell[]> {
 
-  const [spots, res] = await Promise.all([
-    this.spotsSvc.all(),
-    this.getByDateTurn(date, turn), // solo 'Activa'
-  ]);
+    const [spots, res] = await Promise.all([
+      this.spotsSvc.all(),
+      this.getByDateTurn(date, turn), // solo 'Activa'
+    ]);
 
 
-  const bySpot = new Map<number, SPReservation[]>();
-  for (const r of res) {
-    const arr = bySpot.get(r.SpotIdId) ?? [];
-    arr.push(r);
-    bySpot.set(r.SpotIdId, arr);
-  }
+    const bySpot = new Map<number, SPReservation[]>();
+    for (const r of res) {
+      const arr = bySpot.get(r.SpotIdId) ?? [];
+      arr.push(r);
+      bySpot.set(r.SpotIdId, arr);
+    }
 
-  const cells: AvailabilityCell[] = spots
-    .filter(s => s.Activa === "Activa") 
-    .map(s => {
-      const list = bySpot.get(s.ID!) ?? [];
+    const cells: AvailabilityCell[] = spots
+      .filter(s => s.Activa === "Activa") 
+      .map(s => {
+        const list = bySpot.get(s.ID!) ?? [];
 
-      // --- Celda: Carro ---
-      if (s.TipoCelda === "Carro") {
-        const hasCar = list.some(x => x.VehicleType === "Carro");
+        // --- Celda: Carro ---
+        if (s.TipoCelda === "Carro") {
+          const hasCar = list.some(x => x.VehicleType === "Carro");
+          return {
+            spot: s,
+            carBlocked: hasCar,
+            motoSlotsFree: 0,
+            isCarAvailable: !hasCar,
+            isMotoAvailable: false,
+          };
+        }
+
+        // --- Celda: Moto ---
+        if (s.TipoCelda === "Moto") {
+          const motoCount = list.filter(x => x.VehicleType === "Moto").length;
+          const motoFree = Math.max(0, MOTO_SLOTS - motoCount); // MOTO_SLOTS = 4
+
+          return {
+            spot: s,
+            carBlocked: true,              
+            motoSlotsFree: motoFree,       
+            isCarAvailable: false,         
+            isMotoAvailable: motoFree > 0, 
+          };
+        }
+
+        // Si llega un tipo desconocido, lo marcamos como no disponible
         return {
           spot: s,
-          carBlocked: hasCar,
+          carBlocked: true,
           motoSlotsFree: 0,
-          isCarAvailable: !hasCar,
+          isCarAvailable: false,
           isMotoAvailable: false,
         };
-      }
+      });
 
-      // --- Celda: Moto ---
-      if (s.TipoCelda === "Moto") {
-        const motoCount = list.filter(x => x.VehicleType === "Moto").length;
-        const motoFree = Math.max(0, MOTO_SLOTS - motoCount); // MOTO_SLOTS = 4
+    return cells;
+  }
 
-        return {
-          spot: s,
-          carBlocked: true,              
-          motoSlotsFree: motoFree,       
-          isCarAvailable: false,         
-          isMotoAvailable: motoFree > 0, 
-        };
-      }
-
-      // Si llega un tipo desconocido, lo marcamos como no disponible
-      return {
-        spot: s,
-        carBlocked: true,
-        motoSlotsFree: 0,
-        isCarAvailable: false,
-        isMotoAvailable: false,
-      };
-    });
-
-  return cells;
-}
-
-
+  //Funcion para obtener las reservas de un usuario
+  async getUserReserves(userEmail: string, initial?: string, final?: string){
+    const initialDate = new Date(initial + 'T00:00:00');
+    const finalDate = new Date(final + 'T00:00:00');
+    const startIso = initialDate.toISOString();
+    const endIso   = finalDate.toISOString();
+    const filter = `Title eq '${userEmail}' and Status eq 'Activa' ` + `and Date ge datetime'${startIso}' and Date lt datetime'${endIso}'`;;  // Filtro de reservas activas para el dia en el que intenta reservar
+    const items = await this.items().select('Date', 'Turn', 'SpotId/Title').filter(filter)();  // Obtiene los items que coincidan con el filtro
+    return items as SPReservation[];  // Devuelve el número de reservas activas
+  }
 
 
 
