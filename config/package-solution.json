@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "parking-spfx-client-side-solution",
+    "id": "c35ad9b2-d143-48a9-889c-c4e214c93da3",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "parking-spfx description"
+      },
+      "longDescription": {
+        "default": "parking-spfx description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "parking-spfx Feature",
+        "description": "The feature that activates elements of the parking-spfx solution.",
+        "id": "6d0db12a-df4e-47a4-8619-b0fd22827272",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/parking-spfx.sppkg"
+  }
+}

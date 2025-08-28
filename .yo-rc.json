@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.19.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "parking-spfx",
+    "libraryId": "c35ad9b2-d143-48a9-889c-c4e214c93da3",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "parking-spfx",
+    "solutionShortDescription": "parking-spfx description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
