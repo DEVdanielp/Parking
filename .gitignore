@@ -31,4 +31,4 @@ obj
 *.resx.ts
 
 # Styles Generated Code
-
+*.scss.ts
