@@ -1,4 +1,90 @@
+/* AdminSettings.module.scss — tonos claros y minimalistas */
 .wrapper {
-  display: grid; gap: 10px; max-width: 320px;
-  label { display: grid; gap: 4px; }
+  /* Paleta */
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e6eaf2;
+  --ring: #10b98133;   /* halo foco */
+  --accent: #10b981;   /* verde parking */
+
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+/* Contenedor del formulario */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.05);
+  padding: 1rem;
+}
+
+/* Grid responsive para los campos */
+.form {
+  display: grid;
+  gap: .9rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: .75rem;
+}
+
+/* Campo individual */
+.field {
+  display: grid;
+  gap: .35rem;
+}
+
+/* Etiqueta */
+.label {
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+/* Inputs numéricos */
+.input {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: #fbfcfe;
+  color: var(--text);
+  padding: .55rem .65rem;
+  border-radius: .65rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Mensaje de error */
+.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: .6rem .8rem;
+  border-radius: .5rem;
+  margin-bottom: .75rem;
+}
+
+/* Botón guardar */
+.button {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  padding: .6rem 1rem;
+  border-radius: .65rem;
+  cursor: pointer;
+  transition: transform .04s ease, filter .15s ease, background .15s ease;
+}
+.button:hover { filter: brightness(0.98); }
+.button:active { transform: translateY(1px); }
+.button:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Fila final para alinear el botón a la izquierda */
+.actions {
+  margin-top: .25rem;
 }

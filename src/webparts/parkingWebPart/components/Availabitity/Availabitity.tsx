@@ -70,49 +70,78 @@ const Availability: React.FC<{ userEmail: string }> = ({ userEmail }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.wrapper}>
-        <label>
+      {/* Toolbar de filtros */}
+      <div className={styles.toolbar}>
+        <label className={styles.label}>
           Fecha:
-          <input type="date" value={date} min={minDate} max={maxDate} onChange={e=>setDate(e.currentTarget.value)} />
+          <input
+            className={styles.input}
+            type="date"
+            value={date}
+            min={minDate}
+            max={maxDate}
+            onChange={e => setDate(e.currentTarget.value)}
+          />
         </label>
-        <label>
+
+        <label className={styles.label}>
           Turno:
-          <select value={turn} onChange={e=>setTurn(e.currentTarget.value as TurnType)}>
+          <select
+            className={styles.select}
+            value={turn}
+            onChange={e => setTurn(e.currentTarget.value as TurnType)}
+          >
             {turns.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </label>
-        <label>
+
+        <label className={styles.label}>
           Vehículo:
-          <select value={vehicle} onChange={e=>setVehicle(e.currentTarget.value as any)}>
+          <select
+            className={styles.select}
+            value={vehicle}
+            onChange={e => setVehicle(e.currentTarget.value as any)}
+          >
             <option value="Carro">Carro</option>
             <option value="Moto">Moto</option>
           </select>
         </label>
-        <button onClick={load}>Actualizar</button>
+
+        <button className={styles.button} onClick={load}>Actualizar</button>
       </div>
 
       {loading && <div>Cargando...</div>}
       {error && <div className={styles.error}>{error}</div>}
 
       <div className={styles.grid}>
-        {cells.
-          filter(c=> 
-            {
-              if(vehicle === "Moto"){ return c.spot.TipoCelda === 'Moto'}       
-              if (vehicle === 'Carro') {return c.spot.TipoCelda === 'Carro' }
-            } 
-          ).map(c => {
-          const disabled =
-            (vehicle === 'Carro' && !c.isCarAvailable) || (vehicle === 'Moto' && !c.isMotoAvailable);
-        return (
-          <div key={c.spot.ID} className={styles.card}>
-            <div className='code'>{c.spot.Title}</div>
-            <button disabled={disabled} onClick={() => reserve(c.spot)}>
-              {disabled ? 'Sin cupo' : 'Reservar'}
-            </button>
-          </div>
-        );
-        })}
+        {cells
+          .filter(c => {
+            // (opinión) devuelve boolean explícito para evitar warnings
+            if (vehicle === "Moto")  return c.spot.TipoCelda === 'Moto';
+            if (vehicle === "Carro") return c.spot.TipoCelda === 'Carro';
+            return true;
+          })
+          .map(c => {
+            const disabled =
+              (vehicle === 'Carro' && !c.isCarAvailable) ||
+              (vehicle === 'Moto'  && !c.isMotoAvailable);
+
+            return (
+              <div
+                key={c.spot.ID}
+                className={`${styles.card} ${disabled ? styles.cardDisabled : ''}`}
+              >
+                <div className={styles.code}>{c.spot.Title}</div>
+                <button
+                  className={styles.reserveBtn}
+                  disabled={disabled}
+                  onClick={() => reserve(c.spot)}
+                >
+                  {disabled ? 'Sin cupo' : 'Reservar'}
+                </button>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useDeps } from '../../context/AppProviders';
+import {toISODate} from '../../utils/dates'
+import styles from './MisReservas.module.scss';
 
 type Row = any; // usa tu tipo real si lo tienes (SPReservation[])
 
@@ -43,72 +45,87 @@ const MisReservas: React.FC<{ userEmail: string }> = ({ userEmail }) => {
     }
   }, [reservationsSvc, userEmail, from, to]);
 
+    const statusClass = (s: string | undefined) => {
+    const t = (s || '').toLowerCase();
+    if (t.includes('cancel')) return styles.statusCancelada;
+    if (t.includes('termin')) return styles.statusTerminada;
+    if (t.includes('act') || t.includes('aprob') || t.includes('ocup')) return styles.statusActiva;
+    // por defecto: reservada / solicitada
+    return styles.statusReservada || styles.statusSolicitada;
+  };
+
+
   // Cargar al montar (con el rango default de 30 días)
   React.useEffect(() => { load(); }, [load]);
 
   return (
-    <section>
-      <h1>Mis reservas</h1>
+    <section className={`${styles.wrap}`}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Mis reservas</h1>
 
-      {/* Si quieres permitir cambiar el rango manualmente */}
-      <form onSubmit={(e) => { e.preventDefault(); load(); }}>
-        <label>
-          Desde
-          <input
-            type="date"
-            value={from}
-            onChange={(e) => setRange(r => ({ ...r, from: e.currentTarget.value }))}
-          />
-        </label>
-        {' '}
-        <label>
-          Hasta
-          <input
-            type="date"
-            value={to}
-            onChange={(e) => setRange(r => ({ ...r, to: e.currentTarget.value }))}
-          />
-        </label>
-        {' '}
-        <button type="submit">Aplicar</button>
-      </form>
+        <form className={styles.toolbar} onSubmit={(e) => { e.preventDefault(); load(); }}>
+          <label className={styles.label}>
+            Desde
+            <input
+              className={styles.input}
+              type="date"
+              value={from}
+              onChange={(e) => setRange(r => ({ ...r, from: e.currentTarget.value }))}
+            />
+          </label>
+          <label className={styles.label}>
+            Hasta
+            <input
+              className={styles.input}
+              type="date"
+              value={to}
+              onChange={(e) => setRange(r => ({ ...r, to: e.currentTarget.value }))}
+            />
+          </label>
+          <button className={styles.button} type="submit">Aplicar</button>
+        </form>
 
-      {loading && <div>Cargando…</div>}
-      {error && <div>{error}</div>}
+        {loading && <div className={styles.state}>Cargando…</div>}
+        {error && <div className={styles.error}>{error}</div>}
 
-      {!loading && !error && rows.length > 0 && (
-        
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Turno</th>
-              <th>Celda</th>
-              <th>Vehículo</th>
-              <th>Slot Moto</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(r => (
-              <tr key={r.Id}>
-                <td>{r.Date}</td>
-                <td>{r.Turn}</td>
-                <td>{r.SpotId}</td>
-              </tr>
-            ))
+        {!loading && !error && rows.length > 0 && (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Turno</th>
+                  <th>Celda</th>
+                  <th>Vehículo</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map(r => (
+                  <tr key={r.Id}>
+                    <td>{toISODate(new Date(r.Date))}</td>
+                    <td>{r.Turn}</td>
+                    <td>{r.SpotId?.Title ?? r.SpotId}</td>
+                    <td>{r.VehicleType}</td>
+                    <td>
+                      <span className={`${styles.badge} ${statusClass(r.Status)}`}>{r.Status}</span>
+                    </td>
+                    <td className={styles.actions}>
+                      {/* Ejemplo de acción opcional */}
+                      {<button className={styles.actionLight}>Ver</button>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-            }
-          </tbody>
-        </table>
-      )}
-      {!loading && !error && rows.length > 0 && (
-    <ul>
-          {rows.map((r: any) => (
-            <li key={r.ID ?? r.Id}>{JSON.stringify(r)}</li>
-          ))}
-        </ul>
-      )}
+        {!loading && !error && rows.length === 0 && (
+          <div className={styles.state}>No hay reservas en el rango seleccionado.</div>
+        )}
+      </div>
     </section>
   );
 };

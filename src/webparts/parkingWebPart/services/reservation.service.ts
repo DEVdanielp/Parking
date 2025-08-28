@@ -111,7 +111,7 @@ export class ReservationsService {
     const startIso = initialDate.toISOString();
     const endIso   = finalDate.toISOString();
     const filter = `Title eq '${userEmail}' and Status eq 'Activa' ` + `and Date ge datetime'${startIso}' and Date lt datetime'${endIso}'`;;  // Filtro de reservas activas para el dia en el que intenta reservar
-    const items = await this.items().select('Date', 'Turn', 'SpotId/Title').filter(filter)();  // Obtiene los items que coincidan con el filtro
+    const items = await this.items().select('Date', 'Turn', 'SpotId/Title', 'VehicleType', 'Status').filter(filter).expand('SpotId')();  // Obtiene los items que coincidan con el filtro
     return items as SPReservation[];  // Devuelve el número de reservas activas
   }
 

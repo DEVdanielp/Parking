@@ -1,16 +1,99 @@
+/* App.module.scss — tonos claros consistentes con AdminCells/MisReservas */
 .container {
-  padding: 16px;
-  font-family: Segoe UI, Arial, sans-serif;
+  /* Paleta base */
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e6eaf2;
+  --ring: #10b98133;
+  --accent: #10b981;     /* verde “parking” */
+  --accent-600: #059669;
+
+  min-height: 100%;
+  background: var(--bg);
+  padding: 1rem;
 }
 
+/* Header como “card” sticky */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 1rem;
 
-  .actions > button {
-    margin-left: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: .75rem 1rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.05);
+
+  > div:first-child {
+    display: grid;
+    gap: .25rem;
+    font-size: .9rem;
+    color: var(--muted);
+
+    strong { color: var(--text); }
+  }
+}
+
+/* Contenedor de acciones (botonera) */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+/* Botón de navegación (base) */
+.navBtn {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text);
+  font-weight: 700;
+  padding: .5rem .9rem;
+  border-radius: .65rem;
+  cursor: pointer;
+  transition: transform .04s ease, filter .15s ease, border-color .15s ease, background .15s ease;
+  outline: none;
+}
+.navBtn:hover { border-color: var(--accent); }
+.navBtn:active { transform: translateY(1px); }
+.navBtn:focus  { box-shadow: 0 0 0 3px var(--ring); }
+
+/* Estado activo del botón */
+.navBtnActive {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Opcional: un botón primario destacado (si quisieras resaltar “Agendar”) */
+.navPrimary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* Responsive: header en columna cuando no quepa */
+@media (max-width: 720px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+
+    > div:first-child {
+      align-items: start;
+    }
+  }
+  .actions {
+    justify-content: stretch;
+  }
+  .navBtn, .navPrimary {
+    width: 100%;
+    text-align: center;
   }
 }

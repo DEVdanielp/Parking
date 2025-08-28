@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const settings = useSettings();
   const { sp } = useDeps(); 
   const [email, setEmail] = React.useState<string | null>(null);
+  const [name, setName] = React.useState<string | null>(null);
   const [role, setRole] = React.useState<Role>('user');
   const [view, setView] = React.useState<View>('availability');
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         const resolvedEmail = me.Email || upn;
 
         setEmail(resolvedEmail);
+        setName(me.Title)
 
         // ¿Admin? (opcional) – por grupo de SP
         /*const groups = await sp.web.currentUser.groups();
@@ -54,23 +56,44 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.container}>
-          <header className={styles.header}>
-            <div>
-              <div><strong>Usuario:</strong> {email}</div>
-              <div><strong>Rol:</strong> {role}</div>
-            </div>
-            <div className={styles.actions}>
-              <button onClick={() => setView('availability')}>Agendar</button>
-              <button onClick={() => setView('ActiveReserves')}>Mis reservas</button>
-              {role === 'admin' && (
-                <>                  
-                  <button onClick={() => setView('cells')}>Celdas</button>
-                  <button onClick={() => setView('settings')}>Ajustes</button>
-                </>
-              )}
-              <button onClick={() => { setEmail(null); setRole('user'); }}>Salir</button>
-            </div>
-          </header>
+      <header className={styles.header}>
+        <div>
+          <div><strong>Usuario:</strong> {name}</div>
+          <div><strong>Rol:</strong> {role}</div>
+        </div>
+
+      <div className={styles.actions}>
+
+        <button className={`${styles.navBtn} ${view === 'availability' ? styles.navBtnActive : ''}`} onClick={() => setView('availability')}>
+          Agendar
+        </button>
+
+        <button
+          className={`${styles.navBtn} ${view === 'ActiveReserves' ? styles.navBtnActive : ''}`}
+          onClick={() => setView('ActiveReserves')}
+        >
+          Mis reservas
+        </button>
+
+        {role === 'admin' && (
+          <>
+            <button
+              className={`${styles.navBtn} ${view === 'cells' ? styles.navBtnActive : ''}`}
+              onClick={() => setView('cells')}
+            >
+              Celdas
+            </button>
+
+            <button
+              className={`${styles.navBtn} ${view === 'settings' ? styles.navBtnActive : ''}`}
+              onClick={() => setView('settings')}
+            >
+              Ajustes
+            </button>
+          </>
+        )}
+      </div>
+    </header>
 
           {view === 'availability' && <Availability userEmail={email!} />}
           {view === 'cells' && role === 'admin' && <AdminCells />}

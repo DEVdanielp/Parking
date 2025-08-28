@@ -37,41 +37,28 @@ const AdminSettings: React.FC = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div >
-        <label>VisibleDays</label>
-        <input
-          type="number"
-          min={1}
-          value={form.VisibleDays}
-          onChange={e => setForm(f => ({ ...f, VisibleDays: +e.target.value }))}
-        />
+      <div className={styles.card}>
+        <div className={styles.form}>
+          <div className={styles.field}>
+            <label className={styles.label}>Días máximos visibles</label>
+            <input
+              className={styles.input}
+              type="number"
+              min={1}
+              value={form.VisibleDays}
+              onChange={e => setForm(f => ({ ...f, VisibleDays: +e.target.value }))}
+            />
+          </div>
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+
+        <div className={styles.actions}>
+          <button className={styles.button} onClick={save} disabled={saving}>
+            {saving ? 'Guardando…' : 'Guardar'}
+          </button>
+        </div>
       </div>
-
-      <div >
-        <label>MaxAdvanceHours</label>
-        <input
-          type="number"
-          min={1}
-          value={form.MaxAdvanceHours}
-          onChange={e => setForm(f => ({ ...f, MaxAdvanceHours: +e.target.value }))}
-        />
-      </div>
-
-      <div >
-        <label>MaxUserTurns</label>
-        <input
-          type="number"
-          min={1}
-          value={form.MaxUserTurns}
-          onChange={e => setForm(f => ({ ...f, MaxUserTurns: +e.target.value }))}
-        />
-      </div>
-
-      {error && <div >{error}</div>}
-
-      <button  onClick={save} disabled={saving}>
-        {saving ? 'Guardando…' : 'Guardar'}
-      </button>
     </div>
   );
 };

@@ -1,11 +1,169 @@
-.wrapper { display: grid; gap: 12px; }
-.form {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap: 8px;
-  label { display: grid; gap: 4px; }
+/* AdminCells.module.scss — tonos claros y minimalistas */
+.wrapper {
+  /* Paleta */
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e6eaf2;
+  --ring: #10b98133;
+  --accent: #10b981;       /* verde “parking” */
+  --accent-600: #059669;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 1rem;
+
+  h3 {
+    margin: 1rem 0 .75rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+  }
 }
+
+/* ======= Formulario ======= */
+.form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.05);
+  padding: 1rem;
+  display: grid;
+  gap: .9rem;
+
+  /* grid responsive: 2-3 columnas cuando quepa */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.form > label {
+  display: grid;
+  gap: .35rem;
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+/* Controles */
+.form input,
+.form select,
+.form textarea {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: #fbfcfe;
+  color: var(--text);
+  padding: .55rem .65rem;
+  border-radius: .65rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Botón principal del formulario */
+.form > button {
+  justify-self: start;
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: .6rem 1rem;
+  border-radius: .65rem;
+  cursor: pointer;
+  transition: transform .04s ease, filter .15s ease, background .15s ease;
+}
+.form > button:hover { filter: brightness(0.98); }
+.form > button:active { transform: translateY(1px); }
+.form > button:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ======= Tabla ======= */
 .table {
-  width: 100%; border-collapse: collapse;
-  th, td { border: 1px solid #ddd; padding: 6px; }
-  th { background: #f5f5f5; text-align: left; }
+  width: 100%;
+  margin-top: .5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: .9rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden; /* bordes redondeados */
+  box-shadow: 0 10px 20px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.05);
+  font-size: .95rem;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  text-align: left;
+  background: linear-gradient(to bottom, #fff, #fbfbfb);
+  color: #0b1220;
+  border-bottom: 1px solid var(--border);
+  padding: .65rem .8rem;
+  font-weight: 800;
+  z-index: 1;
+}
+
+.table tbody td {
+  padding: .55rem .8rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.table tbody tr:hover {
+  background: #fafcff;
+}
+
+/* Columna Acciones: botones alineados con espacio */
+.table tbody td:last-child {
+  display: flex;
+  gap: .5rem;
+}
+
+/* Botones de acciones en la tabla */
+.btn {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: .45rem .75rem;
+  border-radius: .55rem;
+  cursor: pointer;
+  transition: transform .04s ease, filter .15s ease, background .15s ease;
+}
+.btn:hover { filter: brightness(0.98); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Variante clara (toggle activar/desactivar) */
+.btnLight {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btnLight:hover { border-color: var(--accent); }
+
+/* Variante peligrosa (eliminar) */
+.btnDanger {
+  background: #fff1f2;
+  color: #9f1239;
+  border: 1px solid #fecdd3;
+}
+.btnDanger:hover { filter: brightness(0.98); }
+
+/* Responsive: si la pantalla es muy estrecha, apila acciones si no caben */
+@media (max-width: 720px) {
+  .table tbody td:last-child {
+    flex-wrap: wrap;
+  }
 }
